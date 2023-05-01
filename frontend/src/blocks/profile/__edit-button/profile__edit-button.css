@@ -1,0 +1,28 @@
+.profile__edit-button {
+  grid-area: button;
+  align-self: end;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  background-color: #000000;
+  border: 1px solid #FFFFFF;
+}
+
+@media screen and (max-width: 767px) {
+  .profile__edit-button {
+    position: absolute;
+    right: -28px;
+    top: 7.5px;
+  }
+}
+
+@media screen and (max-width: 424px) {
+  .profile__edit-button {
+    width: 18px;
+    height: 18px;
+    align-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

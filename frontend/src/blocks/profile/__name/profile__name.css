@@ -1,0 +1,30 @@
+.profile__name {
+  grid-area: name;
+  margin: 0;
+  max-width: 336px;
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 0.93;
+  /* В фигме указан 1.14, но фактический размер области = 39px, а не 48px */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 1000px) {
+  .profile__name {
+    font-size: 36px;
+  }
+}
+
+@media screen and (max-width: 424px) {
+  .profile__name {
+    max-width: 230px;
+    font-size: 27px;
+    line-height: 1;
+    /* В фигме указан 33px, но фактический размер области = 26px, а не 33px */
+    text-align: center;
+    justify-self: end;
+    margin-bottom: 14px;
+  }
+}

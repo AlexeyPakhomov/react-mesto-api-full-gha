@@ -1,0 +1,15 @@
+.elements__heart {
+	padding: 0;
+	margin-bottom: 3px;
+	align-self: center;
+	min-width: 22px;
+	width: 100%;
+	min-height: 19px;
+	background: url(../../../images/heart.svg) center no-repeat;
+	/* background: url(../../../../public/images/heart.svg) center no-repeat; */
+	border: none;
+}
+
+.elements__heart:hover {
+	opacity: .5;
+}

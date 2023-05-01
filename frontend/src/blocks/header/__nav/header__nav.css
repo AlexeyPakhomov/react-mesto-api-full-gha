@@ -1,0 +1,12 @@
+@media screen and (min-width: 768px) {
+  .header__nav {
+    margin-top: 6px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .header__nav {
+    margin-top: 4px;
+    margin-right: 14px;
+  }
+}

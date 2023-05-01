@@ -1,0 +1,9 @@
+.burgerMenu_active {
+  display: block;
+}
+
+@media screen and (min-width: 767px) {
+  .burgerMenu_active {
+    display: none;
+  }
+}

@@ -1,0 +1,33 @@
+.profile__info {
+  margin: 0;
+  max-width: 336px;
+  min-height: 73px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(min-content, max-content));
+  gap: 16px 18px;
+  grid-template-areas:
+    "name button"
+    "specialization .";
+}
+
+@media screen and (max-width: 767px) {
+  .profile__info {
+    position: relative;
+    margin-bottom: 36px;
+    min-height: 54px;
+    justify-items: center;
+    row-gap: 14px;
+    grid-template-columns: minmax(min-content, max-content);
+    grid-template-areas:
+      "name"
+      "specialization";
+  }
+}
+
+@media screen and (max-width: 424px) {
+  .profile__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+}

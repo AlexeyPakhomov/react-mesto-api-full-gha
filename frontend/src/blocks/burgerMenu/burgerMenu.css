@@ -1,0 +1,7 @@
+.burgerMenu {
+  margin: 0 auto;
+  max-width: 767px;
+  text-align: center;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  display: none;
+}

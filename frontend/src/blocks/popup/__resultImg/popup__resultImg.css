@@ -1,0 +1,11 @@
+.popup__resultImg {
+  height: 120px;
+  width: 120px;
+  padding: 60px 155px 32px;
+}
+
+@media screen and (max-width: 424px) {
+  .popup__resultImg {
+    padding: 50px 80px 40px;
+  }
+}

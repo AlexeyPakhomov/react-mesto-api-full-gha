@@ -1,0 +1,27 @@
+.profile__specialization {
+  grid-area: specialization;
+  margin: 0;
+  max-width: 336px;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 767px) {
+  .profile__specialization {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 424px) {
+  .profile__specialization {
+    margin: 0 auto;
+    max-width: 230px;
+    font-size: 14px;
+    line-height: 1;
+    /* В фигме указан 17px, но фактический размер области = 14px, а не 17px */
+  }
+}
