@@ -53,7 +53,7 @@ function Register({ onRegister }) {
         </button>
       </form>
       <p className="sign__link">
-        Уже зарегистрированы? <Link to="/sign-in">Войти</Link>
+        Уже зарегистрированы? <Link to="/signin">Войти</Link>
       </p>
     </div>
   );

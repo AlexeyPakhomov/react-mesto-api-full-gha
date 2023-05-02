@@ -155,7 +155,7 @@ function App() {
       .then((data) => {
         setIsRegistrationStatus(true);
         handleInfoTooltip();
-        navigate("/sign-in", { replace: true });
+        navigate("/signin", { replace: true });
       })
       .catch((err) => {
         console.log(`Ошибка регистрации: ${err}`);
@@ -221,7 +221,7 @@ function App() {
     setAuthorizationEmail("");
     localStorage.removeItem("jwt");
     setMenuBurgerActive(false);
-    navigate("/sign-in", { replace: true });
+    navigate("/signin", { replace: true });
   }
 
   return (
@@ -235,8 +235,8 @@ function App() {
           handleToggleMenu={handleToggleMenu}
         />
         <Routes>
-          <Route path="/sign-up" element={<Register onRegister={handleRegister} />} />
-          <Route path="/sign-in" element={<Login onLogin={handleAuthorization} />} />
+          <Route path="/signup" element={<Register onRegister={handleRegister} />} />
+          <Route path="/signin" element={<Login onLogin={handleAuthorization} />} />
           <Route
             path="/"
             element={
@@ -253,7 +253,7 @@ function App() {
               />
             }
           />
-          <Route path="*" element={loggedIn ? <Navigate to="/" replace /> : <Navigate to="/sign-in" replace />} />
+          <Route path="*" element={loggedIn ? <Navigate to="/" replace /> : <Navigate to="/signin" replace />} />
         </Routes>
         <Footer />
         <EditAvatarPopup

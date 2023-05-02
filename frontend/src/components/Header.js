@@ -12,20 +12,20 @@ function Header({ loggedIn, currentUserEmail, onSignOut, menuBurgerActive, handl
 
         <Routes>
           <Route
-            path="/sign-in"
+            path="/signin"
             element={
               <nav className="header__nav">
-                <Link className="header__link link" to="/sign-up">
+                <Link className="header__link link" to="/signup">
                   Регистрация
                 </Link>
               </nav>
             }
           />
           <Route
-            path="/sign-up"
+            path="/signup"
             element={
               <nav className="header__nav">
-                <Link className="header__link link" to="/sign-in">
+                <Link className="header__link link" to="/signin">
                   Войти
                 </Link>
               </nav>
@@ -37,7 +37,7 @@ function Header({ loggedIn, currentUserEmail, onSignOut, menuBurgerActive, handl
               <>
                 <div className="header__container">
                   <p className="header__email">{currentUserEmail}</p>
-                  <Link className="header__link link" to="/sign-in" onClick={onSignOut}>
+                  <Link className="header__link link" to="/signin" onClick={onSignOut}>
                     Выйти
                   </Link>
                 </div>
