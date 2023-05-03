@@ -10,7 +10,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 84.201.133.110
+IP 84.201.133.110
 
 Frontend https://mesto-58.nomoredomains.monster
 
