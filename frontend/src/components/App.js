@@ -85,7 +85,7 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
     // Отправляем запрос в API и получаем обновлённые данные карточки
     if (isLiked) {
       api
@@ -171,6 +171,7 @@ function App() {
         .validityToken(jwt)
         .then((res) => {
           setAuthorizationEmail(res.email);
+          setCurrentUser(res);
           setLoggedIn(true);
           navigate("/", { replace: true });
         })
@@ -221,6 +222,7 @@ function App() {
     setAuthorizationEmail("");
     localStorage.removeItem("jwt");
     setMenuBurgerActive(false);
+    setCurrentUser({});
     navigate("/signin", { replace: true });
   }
 
