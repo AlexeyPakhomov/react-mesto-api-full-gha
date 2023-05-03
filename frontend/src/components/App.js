@@ -170,7 +170,7 @@ function App() {
       auth
         .validityToken(jwt)
         .then((res) => {
-          setAuthorizationEmail(res.data.email);
+          setAuthorizationEmail(res.email);
           setLoggedIn(true);
           navigate("/", { replace: true });
         })
