@@ -1,4 +1,4 @@
-const rateLimit = require("express-rate-limit");
+const rateLimit = require('express-rate-limit');
 
 const limiter = rateLimit({
   windowMs: 8 * 60 * 1000, // 8 минут
@@ -6,7 +6,7 @@ const limiter = rateLimit({
   standardHeaders: true, // Скрываем информацию об ограничении в заголовках `RateLimit-*`
   legacyHeaders: false, // Отключаем заголовки `X-RateLimit-*`
   message:
-    "Превышено допустимое количество запросов. Попробуйте повторить запрос позднее.", // Сообщение при превышении кол-ва запросов
+    'Превышено допустимое количество запросов. Попробуйте повторить запрос позднее.', // Сообщение при превышении кол-ва запросов
 });
 
 // Генерация секретных ключей
