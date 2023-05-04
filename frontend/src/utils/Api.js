@@ -83,10 +83,8 @@ class Api {
 }
 
 const api = new Api({
-  //url: "https://mesto.nomoreparties.co/v1/cohort-58/",
   url: "https://api.mesto-58.nomoredomains.monster",
   headers: {
-    //authorization: "8ec07323-384f-4707-a5b9-b183fdd7d129",
     "Content-type": "application/json",
     authorization: `Bearer ${localStorage.getItem('jwt')}`,
   },

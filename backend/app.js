@@ -19,6 +19,12 @@ app.use(bodyParser.json());
 app.use(requestLogger); // подключаем логгер запросов до всех роутов
 app.use(cors);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use(routes);
 
 app.use(errorLogger); // подключаем логгер ошибок после обработчиков роутов и до обработчиков ошибок
