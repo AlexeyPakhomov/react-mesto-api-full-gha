@@ -84,6 +84,9 @@ function App() {
   }
 
   function handleRegister(data) {
+    if(!data.email || !data.password) {
+      return;
+    };
     auth
       .register({ email: data.email, password: data.password })
       .then((data) => {
