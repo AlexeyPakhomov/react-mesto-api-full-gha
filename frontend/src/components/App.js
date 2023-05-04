@@ -42,13 +42,14 @@ function App() {
   }, []);
 
   useEffect(() => {
-    loggedIn &&
+    if(loggedIn) {
       api
         .getAllCards()
         .then((cardsData) => {
           setCards(cardsData);
         })
         .catch((err) => console.log(`Ошибка получения данных Cards: ${err}`));
+    }
   }, [loggedIn]);
 
   function handleToggleMenu() {
@@ -84,9 +85,6 @@ function App() {
   }
 
   function handleRegister(data) {
-    if(!data.email || !data.password) {
-      return;
-    };
     auth
       .register({ email: data.email, password: data.password })
       .then((data) => {
