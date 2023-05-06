@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
-import api from '../utils/Api';
+import { Api } from '../utils/Api';
 import * as auth from '../utils/auth';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
@@ -22,10 +22,11 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
+
+  const [loggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
-  const [loggedIn, setLoggedIn] = useState(false);
   const [isRegistrationStatus, setIsRegistrationStatus] = useState(false);
   const [authorizationEmail, setAuthorizationEmail] = useState('');
   const [menuBurgerActive, setMenuBurgerActive] = useState(false);
@@ -33,24 +34,91 @@ function App() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loggedIn &&
-      api
-        .getUserInfo()
-        .then((currentUserData) => setCurrentUser(currentUserData))
-        .catch((err) => console.log(`Ошибка получения данных UserInfo: ${err}`));
-  }, []);
+  const api = new Api({
+    url: 'https://api.mesto-58.nomoredomains.monster',
+    headers: {
+      'Content-type': 'application/json',
+      authorization: `Bearer ${localStorage.getItem('jwt')}`,
+    },
+  });
 
   useEffect(() => {
-    if(loggedIn) {
-      api
-        .getAllCards()
-        .then((cardsData) => {
-          setCards(cardsData);
-        })
-        .catch((err) => console.log(`Ошибка получения данных Cards: ${err}`));
+    if (!localStorage.getItem('jwt')) {
+      return;
     }
+    Promise.all([api.getUserInfo(), api.getAllCards()])
+      .then(([user, cards]) => {
+        setCurrentUser(user);
+        setCards(cards.reverse());
+        //console.log('Получаем данные юзера', user);
+        //console.log('Получаем данные cards', user);
+      })
+      .catch((err) => console.log(`Ошибка получения данных Cards & User: ${err}`));
   }, [loggedIn]);
+
+  function handleTokenCheck() {
+    if (!localStorage.getItem('jwt')) {
+      return;
+    }
+    const jwt = localStorage.getItem('jwt');
+    auth
+      .validityToken(jwt)
+      .then((res) => {
+        setIsLoggedIn(true);
+        setAuthorizationEmail(res.email);
+        navigate('/', { replace: true });
+        //console.log('handleTokenCheck, токен проверен', res);
+      })
+      .catch((err) => console.log(`Ошибка валидации токена: ${err}`));
+  }
+
+  useEffect(() => {
+    handleTokenCheck();
+  }, []);
+
+  function handleRegister(data) {
+    auth
+      .register({ email: data.email, password: data.password })
+      .then((data) => {
+        setIsRegistrationStatus(true);
+        handleInfoTooltip();
+        navigate('/signin', { replace: true });
+        console.log('Пользователь зарегистрирован', data);
+      })
+      .catch((err) => {
+        console.log(`Ошибка регистрации: ${err}`);
+        setIsRegistrationStatus(false);
+        handleInfoTooltip();
+      });
+  }
+
+  function handleAuthorization(data) {
+    auth
+      .authorization({ email: data.email, password: data.password })
+      .then((data) => {
+        setIsLoggedIn(true);
+        localStorage.setItem('jwt', data.token);
+        handleTokenCheck();
+        navigate('/', { replace: true });
+        //console.log('handleAuthorization, токен', data);
+      })
+      .catch((err) => {
+        console.log(`Ошибка авторизации: ${err}`);
+        setIsRegistrationStatus(false);
+        handleInfoTooltip();
+      });
+  }
+
+  function handleSignOut() {
+    setIsLoggedIn(false);
+    setAuthorizationEmail('');
+    localStorage.removeItem('jwt');
+    setMenuBurgerActive(false);
+    setCurrentUser({});
+    setCards([]);
+    navigate('/signin', { replace: true });
+    //console.log('Пользователь вышел', currentUser);
+  }
 
   function handleToggleMenu() {
     setMenuBurgerActive(!menuBurgerActive);
@@ -84,76 +152,20 @@ function App() {
     setSelectedCard({});
   }
 
-  function handleRegister(data) {
-    auth
-      .register({ email: data.email, password: data.password })
-      .then((data) => {
-        setIsRegistrationStatus(true);
-        handleInfoTooltip();
-        navigate('/signin', { replace: true });
-      })
-      .catch((err) => {
-        console.log(`Ошибка регистрации: ${err}`);
-        setIsRegistrationStatus(false);
-        handleInfoTooltip();
-      });
-  }
-
-  function handleTokenCheck() {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem('jwt');
-      auth
-        .validityToken(jwt)
-        .then((res) => {
-          setAuthorizationEmail(res.email);
-          setCurrentUser(res);
-          setLoggedIn(true);
-          navigate('/', { replace: true });
-        })
-        .catch((err) => console.log(err));
-    }
-  }
-
-  useEffect(() => {
-    handleTokenCheck();
-  }, []);
-
-  function handleAuthorization(data) {
-    auth
-      .authorization({ email: data.email, password: data.password })
-      .then((data) => {
-        setLoggedIn(true);
-        localStorage.setItem('jwt', data.token);
-        handleTokenCheck();
-        navigate('/', { replace: true });
-      })
-      .catch((err) => {
-        console.log(`Ошибка авторизации: ${err}`);
-        setIsRegistrationStatus(false);
-        handleInfoTooltip();
-      });
-  }
-
-  function handleSignOut() {
-    setLoggedIn(false);
-    setAuthorizationEmail('');
-    localStorage.removeItem('jwt');
-    setMenuBurgerActive(false);
-    setCurrentUser({});
-    setCards([]);
-    navigate('/signin', { replace: true });
-  }
-
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i === currentUser._id);
+    const isLiked = card.likes.some((i) => {
+      //console.log('Это i в isLiked', i, i === currentUser._id);
+      return i === currentUser._id;
+    });
+    //console.log('Текущий пользователь во время лайка', currentUser._id);
     // Отправляем запрос в API и получаем обновлённые данные карточки
-    console.log(isLiked);
     if (isLiked) {
       api
         .deleteLike(card._id)
         .then((newCard) => {
           setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+          //console.log('Удален лайк', newCard);
         })
         .catch((err) => console.log(`Ошибка удаления лайка: ${err}`));
     } else {
@@ -161,9 +173,23 @@ function App() {
         .addLike(card._id)
         .then((newCard) => {
           setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+          //console.log('Добавлен лайк', newCard);
         })
         .catch((err) => console.log(`Ошибка добавления лайка: ${err}`));
     }
+  }
+
+  function handleAddPlaceSubmit(data) {
+    setIsLoading(true);
+    api
+      .addNewCard(data)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+        //console.log('Карточка добавлена', newCard);
+      })
+      .catch((err) => console.log(`Ошибка добавления новых карточек: ${err}`))
+      .finally(() => setIsLoading(false));
   }
 
   function handleCardDelete(card) {
@@ -171,6 +197,7 @@ function App() {
       .deleteCard(card._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== card._id));
+        //console.log('Карточка удалена', card);
       })
       .catch((err) => console.log(`Ошибка удаления карточки: ${err}`));
   }
@@ -182,6 +209,7 @@ function App() {
       .then((currentUserData) => {
         setCurrentUser(currentUserData);
         closeAllPopups();
+        //console.log('Обновлены данные юзера', data);
       })
       .catch((err) => console.log(`Ошибка редактирования попап профиля: ${err}`))
       .finally(() => setIsLoading(false));
@@ -194,20 +222,9 @@ function App() {
       .then((avatar) => {
         setCurrentUser(avatar);
         closeAllPopups();
+        //console.log('Обновлена ава юзера', data);
       })
       .catch((err) => console.log(`Ошибка редактирования аватара: ${err}`))
-      .finally(() => setIsLoading(false));
-  }
-
-  function handleAddPlaceSubmit(data) {
-    setIsLoading(true);
-    api
-      .addNewCard(data)
-      .then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
-      })
-      .catch((err) => console.log(`Ошибка добавления новых карточек: ${err}`))
       .finally(() => setIsLoading(false));
   }
 

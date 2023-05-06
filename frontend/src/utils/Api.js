@@ -30,7 +30,7 @@ class Api {
 
   editProfile(data) {
     return this._request(`${this._url}/users/me`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
@@ -41,7 +41,7 @@ class Api {
 
   addNewCard(data) {
     return this._request(`${this._url}/cards`, {
-      method: "POST",
+      method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
@@ -52,28 +52,28 @@ class Api {
 
   deleteCard(_id) {
     return this._request(`${this._url}/cards/${_id}`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: this._headers,
     });
   }
 
   addLike(_id) {
     return this._request(`${this._url}/cards/${_id}/likes`, {
-      method: "PUT",
+      method: 'PUT',
       headers: this._headers,
     });
   }
 
   deleteLike(_id) {
     return this._request(`${this._url}/cards/${_id}/likes`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: this._headers,
     });
   }
 
   editAvatar(data) {
     return this._request(`${this._url}/users/me/avatar`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({
         avatar: data.avatar,
@@ -82,12 +82,4 @@ class Api {
   }
 }
 
-const api = new Api({
-  url: "https://api.mesto-58.nomoredomains.monster",
-  headers: {
-    "Content-type": "application/json",
-    authorization: `Bearer ${localStorage.getItem('jwt')}`,
-  },
-});
-
-export default api;
+export { Api };
