@@ -46,6 +46,7 @@ function App() {
     if (!localStorage.getItem('jwt')) {
       return;
     }
+    loggedIn &&
     Promise.all([api.getUserInfo(), api.getAllCards()])
       .then(([user, cards]) => {
         setCurrentUser(user);
