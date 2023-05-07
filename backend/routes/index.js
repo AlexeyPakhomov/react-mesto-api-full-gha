@@ -11,8 +11,8 @@ router.post('/signin', joiSignIn, login);
 router.use(auth);
 router.use('/users', usersRoutes);
 router.use('/cards', cardsRoutes);
-router.use('*', () => {
-  throw new NotFoundError('Страница не найдена');
+router.use('*', (req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
 });
 
 module.exports = router;

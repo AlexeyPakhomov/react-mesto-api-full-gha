@@ -84,7 +84,7 @@ function App() {
         setIsRegistrationStatus(true);
         handleInfoTooltip();
         navigate('/signin', { replace: true });
-        console.log('Пользователь зарегистрирован', data);
+        //console.log('Пользователь зарегистрирован', data);
       })
       .catch((err) => {
         console.log(`Ошибка регистрации: ${err}`);

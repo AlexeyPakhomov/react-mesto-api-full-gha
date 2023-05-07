@@ -17,8 +17,8 @@ const schema = new Schema(
         message: 'Некорректная ссылка',
       },
     },
-    owner: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    likes: [{ type: Schema.Types.ObjectId, default: [] }],
+    owner: { type: Schema.Types.ObjectId, ref: 'user', required: true },
+    likes: [{ type: Schema.Types.ObjectId, ref: 'user', default: [] }],
     createdAt: { type: Date, default: Date.now },
   },
   {
@@ -26,4 +26,4 @@ const schema = new Schema(
   },
 );
 
-module.exports = model('Card', schema);
+module.exports = model('card', schema);

@@ -3,7 +3,7 @@ const helmet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser') В последних версиях ExpressJS body-parser уже встроен
 const { limiter } = require('./utils/config');
 const { cors } = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -15,7 +15,7 @@ const { PORT = 3000 } = process.env;
 
 app.use(helmet());
 app.use(limiter); // Ограничение распространяется на все окна
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(requestLogger); // подключаем логгер запросов до всех роутов
 app.use(cors);
 

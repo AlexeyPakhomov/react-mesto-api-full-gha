@@ -13,7 +13,7 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.send(card))
+    .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные при создании карточки.'));
@@ -31,7 +31,7 @@ const deleteCardById = (req, res, next) => {
       if (card.owner.toString() !== req.user._id) {
         return next(new ForbiddenError('Вы не можете удалять карточки других пользователей'));
       }
-      return Card.findByIdAndRemove(req.params.cardId).then(() => res.send(card));
+      return Card.deleteOne().then(() => res.send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
