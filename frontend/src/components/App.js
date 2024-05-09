@@ -35,7 +35,8 @@ function App() {
   const navigate = useNavigate();
 
   const api = new Api({
-    url: 'https://api.mesto-58.nomoredomains.monster',
+    //url: 'https://api.mesto-58.nomoredomains.monster',
+    url: 'https://api.mesto.pakhomov.site',
     headers: {
       'Content-type': 'application/json',
       authorization: `Bearer ${localStorage.getItem('jwt')}`,
@@ -47,14 +48,14 @@ function App() {
       return;
     }
     loggedIn &&
-    Promise.all([api.getUserInfo(), api.getAllCards()])
-      .then(([user, cards]) => {
-        setCurrentUser(user);
-        setCards(cards.reverse());
-        //console.log('Получаем данные юзера', user);
-        //console.log('Получаем данные cards', user);
-      })
-      .catch((err) => console.log(`Ошибка получения данных Cards & User: ${err}`));
+      Promise.all([api.getUserInfo(), api.getAllCards()])
+        .then(([user, cards]) => {
+          setCurrentUser(user);
+          setCards(cards.reverse());
+          //console.log('Получаем данные юзера', user);
+          //console.log('Получаем данные cards', user);
+        })
+        .catch((err) => console.log(`Ошибка получения данных Cards & User: ${err}`));
   }, [loggedIn]);
 
   function handleTokenCheck() {
@@ -258,14 +259,8 @@ function App() {
           handleToggleMenu={handleToggleMenu}
         />
         <Routes>
-          <Route
-            path="/signup"
-            element={<Register onRegister={handleRegister} />}
-          />
-          <Route
-            path="/signin"
-            element={<Login onLogin={handleAuthorization} />}
-          />
+          <Route path="/signup" element={<Register onRegister={handleRegister} />} />
+          <Route path="/signin" element={<Login onLogin={handleAuthorization} />} />
           <Route
             path="/"
             element={
@@ -284,19 +279,7 @@ function App() {
           />
           <Route
             path="*"
-            element={
-              loggedIn ? (
-                <Navigate
-                  to="/"
-                  replace
-                />
-              ) : (
-                <Navigate
-                  to="/signin"
-                  replace
-                />
-              )
-            }
+            element={loggedIn ? <Navigate to="/" replace /> : <Navigate to="/signin" replace />}
           />
         </Routes>
         <Footer />
