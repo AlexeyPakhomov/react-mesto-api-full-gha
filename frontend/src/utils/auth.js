@@ -1,4 +1,5 @@
-const BASE_URL = 'https://api.mesto-58.nomoredomains.monster';
+//const BASE_URL = 'https://api.mesto-58.nomoredomains.monster';
+const BASE_URL = 'https://api.mesto.pakhomov.site';
 
 function checkResponse(res) {
   if (res.ok) {
