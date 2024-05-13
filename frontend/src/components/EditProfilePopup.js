@@ -1,43 +1,44 @@
-import React, { useState, useContext } from "react";
-import PopupWithForm from "./PopupWithForm";
-import CurrentUserContext from "../contexts/CurrentUserContext";
+import React, { useContext, useEffect } from 'react';
+import PopupWithForm from './PopupWithForm';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
   // Подписка на контекст
   const currentUser = useContext(CurrentUserContext);
 
+  const { values, nameError, aboutError, handleChange, isValid, resetForm } = useFormAndValidation({
+    name: currentUser.name,
+    about: currentUser.about,
+  });
+
+  const { name, about } = values;
+
   // После загрузки текущего пользователя из API
   // его данные будут использованы в управляемых компонентах.
-  React.useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
+  useEffect(() => {
+    currentUser ? resetForm(currentUser) : resetForm();
   }, [currentUser, isOpen]);
-
-  function handleChangeName(evt) {
-    setName(evt.target.value);
-  }
-
-  function handleChangeDescription(evt) {
-    setDescription(evt.target.value);
-  }
 
   function handleSubmit(evt) {
     evt.preventDefault();
     // Передаём значения управляемых компонентов во внешний обработчик
     onUpdateUser({
       name,
-      about: description,
+      about,
     });
   }
 
   return (
-    <PopupWithForm name="profile" title="Редактировать профиль" buttonText={buttonText} isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit}>
+    <PopupWithForm
+      name="profile"
+      title="Редактировать профиль"
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}>
       <div className="popup__input-container">
         <input
-          className="popup__input popup__input_text_name"
+          className={`popup__input popup__input_text_name ${nameError ? 'popup__input_error' : ''}`}
           form="formUserSpecialization"
           type="text"
           name="name"
@@ -46,14 +47,14 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
           minLength="2"
           maxLength="40"
           required
-          value={name || ""}
-          onChange={handleChangeName}
+          value={name || ''}
+          onChange={handleChange}
         />
-        <span className="popup__input-error name-input-error"></span>
+        {nameError && <span className="popup__span-error">{nameError}</span>}
       </div>
       <div className="popup__input-container">
         <input
-          className="popup__input popup__input_text_job"
+          className={`popup__input popup__input_text_job ${aboutError ? 'popup__input_error' : ''}`}
           form="formUserSpecialization"
           type="text"
           name="about"
@@ -62,11 +63,21 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser, buttonText }) {
           minLength="2"
           maxLength="200"
           required
-          value={description || ""}
-          onChange={handleChangeDescription}
+          value={about || ''}
+          onChange={handleChange}
         />
-        <span className="popup__input-error specialization-input-error"></span>
+        {aboutError && <span className="popup__span-error">{aboutError}</span>}
       </div>
+      <button
+        className={`popup__button link ${
+          !isValid || (currentUser.name === name && currentUser.about === about)
+            ? 'popup__button_disabled'
+            : ''
+        }`}
+        type="submit"
+        disabled={!isValid || (currentUser.name === name && currentUser.about === about)}>
+        {buttonText}
+      </button>
     </PopupWithForm>
   );
 }

@@ -1,33 +1,39 @@
-import React, { useState } from "react";
-import PopupWithForm from "./PopupWithForm";
+import React, { useEffect } from 'react';
+import PopupWithForm from './PopupWithForm';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 function AddPlacePopup({ isOpen, onClose, onAddPlace, buttonText }) {
-  const [name, setName] = useState("");
-  const [link, setLink] = useState("");
+  const { values, nameError, urlError, handleChange, isValid, resetForm } = useFormAndValidation({
+    name: '',
+    link: '',
+  });
 
-  function handleChangeName(evt) {
-    setName(evt.target.value);
-  }
+  const { name, link } = values;
 
-  function handleChangeLink(evt) {
-    setLink(evt.target.value);
-  }
+  useEffect(() => {
+    resetForm({
+      name: '',
+      link: '',
+    });
+  }, [isOpen]);
 
   function handleSubmit(evt) {
     evt.preventDefault();
     onAddPlace({ name, link });
   }
 
-  React.useEffect(() => {
-    setName("");
-    setLink("");
-  }, [isOpen]);
-
   return (
-    <PopupWithForm name="photo" title="Новое место" buttonText={buttonText} isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit}>
+    <PopupWithForm
+      name="photo"
+      title="Новое место"
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}>
       <div className="popup__input-container">
         <input
-          className="popup__input popup__input_text_place"
+          className={`popup__input popup__input_text_place ${
+            nameError ? 'popup__input_error' : ''
+          }`}
           form="formPlace"
           type="text"
           name="name"
@@ -37,13 +43,13 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, buttonText }) {
           maxLength="30"
           required
           value={name}
-          onChange={handleChangeName}
+          onChange={handleChange}
         />
-        <span className="popup__input-error place-input-error"></span>
+        {nameError && <span className="popup__span-error">{nameError}</span>}
       </div>
       <div className="popup__input-container">
         <input
-          className="popup__input popup__input_text_url"
+          className={`popup__input popup__input_text_url ${urlError ? 'popup__input_error' : ''}`}
           form="formPlace"
           type="url"
           name="link"
@@ -51,10 +57,16 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace, buttonText }) {
           placeholder="Ссылка на картинку"
           required
           value={link}
-          onChange={handleChangeLink}
+          onChange={handleChange}
         />
-        <span className="popup__input-error url-input-error"></span>
+        {urlError && <span className="popup__span-error">{urlError}</span>}
       </div>
+      <button
+        className={`popup__button link ${!isValid ? 'popup__button_disabled' : ''}`}
+        type="submit"
+        disabled={!isValid}>
+        {buttonText}
+      </button>
     </PopupWithForm>
   );
 }

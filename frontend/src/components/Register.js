@@ -1,54 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useFormAndValidation } from '../hooks/useFormAndValidation';
 
 function Register({ onRegister }) {
-  const [formValue, setFormValue] = React.useState({
-    email: "",
-    password: "",
-  });
-
-  function handleChange(evt) {
-    const { name, value } = evt.target;
-
-    setFormValue({
-      ...formValue,
-      [name]: value,
+  const { values, setValues, handleChange, isValid, emailError, passwordError } =
+    useFormAndValidation({
+      email: '',
+      password: '',
     });
-  }
+
+  const { email, password } = values;
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    onRegister(formValue);
-    setFormValue({ email: "", password: "" });
+    onRegister(values);
+    setValues({ email: '', password: '' });
   }
 
   return (
     <div className="sign">
       <h2 className="sign__title">Регистрация</h2>
       <form className="sign__form" onSubmit={handleSubmit}>
-        <input
-          className="sign__input"
-          id="email"
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          value={formValue.email}
-          onChange={handleChange}
-        ></input>
+        <label className="sign__label">
+          <input
+            className={`sign__input ${emailError ? 'sign__input_error' : ''}`}
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Email"
+            required
+            value={email || ''}
+            onChange={handleChange}></input>
+          {emailError && <span className="sign__span-error">{emailError}</span>}
+        </label>
 
-        <input
-          className="sign__input"
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Пароль"
-          value={formValue.password}
-          onChange={handleChange}
-          required
-        ></input>
+        <label className="sign__label">
+          <input
+            className={`sign__input ${passwordError ? 'sign__input_error' : ''}`}
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Пароль"
+            value={password || ''}
+            onChange={handleChange}
+            required></input>
+          {passwordError && <span className="sign__span-error">{passwordError}</span>}
+        </label>
 
-        <button className="sign__button" type="submit">
+        <button className="sign__button" type="submit" disabled={!isValid}>
           Зарегистрироваться
         </button>
       </form>

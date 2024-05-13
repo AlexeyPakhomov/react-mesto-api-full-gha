@@ -287,13 +287,13 @@ function App() {
           isOpen={isEditAvatarPopupOpen}
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
-          buttonText={isLoading ? 'Сохрание...' : 'Сохранить'}
+          buttonText={isLoading ? 'В процессе сохранения...' : 'Сохранить'}
         />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
           onUpdateUser={handleUpdateUser}
-          buttonText={isLoading ? 'Сохрание...' : 'Сохранить'}
+          buttonText={isLoading ? 'В процессе сохранения...' : 'Сохранить'}
         />
         <AddPlacePopup
           isOpen={isAddPlacePopupOpen}
