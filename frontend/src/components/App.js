@@ -36,6 +36,7 @@ function App() {
 
   const api = new Api({
     //url: 'https://api.mesto-58.nomoredomains.monster',
+    //url: 'http://localhost:3001',
     url: 'https://api.mesto.pakhomov.site',
     headers: {
       'Content-type': 'application/json',
@@ -189,6 +190,7 @@ function App() {
         setCards([newCard, ...cards]);
         closeAllPopups();
         //console.log('Карточка добавлена', newCard);
+        //console.log('Карточки после добавления', cards);
       })
       .catch((err) => console.log(`Ошибка добавления новых карточек: ${err}`))
       .finally(() => setIsLoading(false));
@@ -198,8 +200,7 @@ function App() {
     api
       .deleteCard(card._id)
       .then(() => {
-        setCards((state) => state.filter((c) => c._id !== card._id));
-        //console.log('Карточка удалена', card);
+        setCards((prevState) => prevState.filter((c) => c._id !== card._id));
       })
       .catch((err) => console.log(`Ошибка удаления карточки: ${err}`));
   }

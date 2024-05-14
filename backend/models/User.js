@@ -20,7 +20,8 @@ const schema = new Schema(
     },
     avatar: {
       type: String,
-      default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+      default:
+        'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
         validator: (v) => regexUrl.test(v),
         message: 'Некорректная ссылка',
@@ -46,6 +47,7 @@ const schema = new Schema(
   },
 );
 
+// eslint-disable-next-line func-names
 schema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
     .select('+password')
