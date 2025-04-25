@@ -4,4 +4,4 @@
 
 ## Ссылка на проект
 
-https://mesto.pakhomov.site/
+https://mesto.rizhovcode.ru/
